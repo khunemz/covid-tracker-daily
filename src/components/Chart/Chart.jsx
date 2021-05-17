@@ -5,22 +5,31 @@ import styles from './Chart.module.css'
 
 
 function Chart() {
-  const [dailyData, setDailyData] = useState({});
+  const [dailyData, setDailyData] = useState([]);
   
   useEffect(() => {
     const fetchApi = async () => {
-      const dailyData = await fetchDailyData();
-      setDailyData(dailyData);
+      setDailyData(await fetchDailyData());
     };
-
     fetchApi();
-  });
+  },[]);
 
-  // const lineChart = ();
+  const lineChart = () => {
+
+    console.log(dailyData);
+    return dailyData.length > 0 ? 
+    ( <Line data={{ 
+        labels: dailyData.map(({ date }) => date) , 
+        datasets: [{data: dailyData.map(({ confirmed }) => confirmed), label: 'Infected', borderColor: '#3333ff', fill: true }]
+        }} 
+      />
+    ) : 'Loading...';
+  }
 
   return (
     <div>
       <h2>Chart</h2>
+      <div>{ lineChart() }</div>
     </div>
   )
 }
